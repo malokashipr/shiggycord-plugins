@@ -1,0 +1,425 @@
+(function(exports, metroCommon, pluginMod, storageMod, uiAssets, uiComponents) {
+    "use strict";
+
+    var React = metroCommon.React;
+    var registerCommand = vendetta.commands.registerCommand;
+    var storage = pluginMod.storage;
+    var Forms = uiComponents.Forms;
+    var General = uiComponents.General;
+    var ScrollView = General.ScrollView;
+    var FormSection = Forms.FormSection;
+    var FormInput = Forms.FormInput;
+    var FormRow = Forms.FormRow;
+    var FormDivider = Forms.FormDivider;
+    var FormText = Forms.FormText;
+
+    var BUILT_IN_ANIME = [
+        // â”€â”€â”€ Core Required â”€â”€â”€
+        "Attack on Titan",
+        "Hunter x Hunter",
+        "Hunter x Hunter 2011",
+        "Kaguya-sama: Love is War",
+        "Marriage Toxin",
+
+        // â”€â”€â”€ Action / Adventure / Shonen â”€â”€â”€
+        "Jujutsu Kaisen",
+        "Demon Slayer",
+        "One Piece",
+        "Naruto Shippuden",
+        "Bleach",
+        "My Hero Academia",
+        "Fullmetal Alchemist: Brotherhood",
+        "Chainsaw Man",
+        "Black Clover",
+        "JoJo's Bizarre Adventure",
+        "Dragon Ball Z",
+        "Dragon Ball Super",
+        "One Punch Man",
+        "Vinland Saga",
+        "Vinland Saga S2",
+        "Berserk 1997",
+        "Bleach: Thousand-Year Blood War",
+        "Hell's Paradise",
+        "Kaiju No. 8",
+        "Solo Leveling",
+        "Akame ga Kill",
+        "Blue Exorcist",
+        "Noragami",
+        "D.Gray-man",
+        "Soul Eater",
+        "Fire Force",
+        "Seraph of the End",
+        "Claymore",
+        "Dorohedoro",
+        "Black Lagoon",
+        "Gangsta",
+        "Akudama Drive",
+        "Trigun Stampede",
+        "Trigun 1998",
+        "Samurai Champloo",
+        "Michiko & Hatchin",
+        "Baccano!",
+        "Durarara!!",
+
+        // â”€â”€â”€ Psychological / Thriller / Mystery â”€â”€â”€
+        "Monster",
+        "Steins;Gate",
+        "Death Note",
+        "Ergo Proxy",
+        "Paranoia Agent",
+        "Psycho-Pass",
+        "Zetsuen no Tempest",
+        "Higurashi",
+        "Higurashi Sotsu",
+        "Higurashi Gou",
+        "Umineko",
+        "Umineko S1",
+        "Umineko When They Cry",
+        "Perfect Blue",
+        "Mirai Nikki",
+        "Btooom!",
+        "Dusk Maiden of Amnesia",
+        "Corpse Party",
+        "Requiem for the Phantom",
+        "Phantom: Requiem",
+        "Texhnolyze",
+        "Lain",
+        "Paprika",
+        "Millennium Actress",
+        "Mind Game",
+        "20th Century Boys",
+        "Pluto",
+        "Terror in Resonance",
+        "Boogiepop Phantom",
+        "Ghost Hunt",
+
+        // â”€â”€â”€ Sci-Fi / Mecha â”€â”€â”€
+        "Code Geass",
+        "Legend of the Galactic Heroes",
+        "Neon Genesis Evangelion",
+        "Gurren Lagann",
+        "Cowboy Bebop",
+        "86 Eighty-Six",
+        "Aldnoah.Zero",
+        "Aldnoah.Zero S2",
+        "PlanetES",
+        "Mobile Suit Gundam: Iron-Blooded Orphans",
+        "Space Dandy",
+        "Eureka Seven",
+        "Macross Frontier",
+        "Macross Delta",
+        "Zeta Gundam",
+        "Gundam 00",
+        "Gundam Wing",
+        "Turn A Gundam",
+        "Knights of Sidonia",
+        "Blast of Tempest",
+        "Guilty Crown",
+        "Darling in the Franxx",
+        "SSSS.Gridman",
+        "SSSS.Dynazenon",
+        "Promare",
+        "Expelled from Paradise",
+        "Akira",
+        "Ghost in the Shell 1995",
+        "Ghost in the Shell: SAC",
+        "Darker than Black",
+        "Blue Gender",
+
+        // â”€â”€â”€ Slice of Life / Drama â”€â”€â”€
+        "Barakamon",
+        "Laid-Back Camp",
+        "Hibike! Euphonium",
+        "Hibike! Euphonium S2",
+        "March Comes in Like a Lion",
+        "March Comes in Like a Lion S2",
+        "Violet Evergarden",
+        "Clannad",
+        "Clannad: After Story",
+        "Anohana",
+        "A Silent Voice",
+        "Natsume's Book of Friends",
+        "Natsume's Book of Friends S2-S6",
+        "Usagi Drop",
+        "Silver Spoon",
+        "Kids on the Slope",
+        "A Place Further Than the Universe",
+        "Showa Genroku Rakugo Shinju",
+        "Bartender",
+        "Bartender 2024",
+        "Bartender Glass of God",
+        "Mushishi",
+        "Aria",
+        "Yokohama Kaidashi Kikou",
+        "Non Biyori",
+        "Nana",
+        "Paradise Kiss",
+        "Honey and Clover",
+        "Nodame Cantabile",
+        "Nodame Cantabile: Paris Chapter",
+        "White Album 2",
+        "I Want to Eat Your Pancreas",
+        "Weathering With You",
+        "Your Name",
+        "5 Centimeters Per Second",
+        "Garden of Words",
+        "Wolf Children",
+        "The Girl Who Leapt Through Time",
+
+        // â”€â”€â”€ Comedy â”€â”€â”€
+        "Gintama",
+        "Gintama: The Final",
+        "Konosuba",
+        "Konosuba S3",
+        "Konosuba S1-S2",
+        "Saiki K",
+        "Saiki K S2",
+        "Nichijou",
+        "Grand Blue",
+        "Grand Blue S2",
+        "Asobi Asobase",
+        "Hinamatsuri",
+        "Seitokai Yakuindomo",
+        "Daily Lives of High School Boys",
+        "Osomatsu-san",
+        "Osomatsu-san S2-S3",
+        "Sket Dance",
+
+        // â”€â”€â”€ Isekai / Fantasy â”€â”€â”€
+        "Re:Zero",
+        "Re:Zero S3",
+        "Re:Zero S1-S2",
+        "Mushoku Tensei",
+        "Mushoku Tensei S2",
+        "Mushoku Tensei S1",
+        "Overlord",
+        "Overlord S4",
+        "Overlord S1-S3",
+        "That Time I Got Reincarnated as a Slime",
+        "That Time I Got Reincarnated as a Slime S3",
+        "That Time I Got Reincarnated as a Slime S1-S2",
+        "No Game No Life",
+        "No Game No Life Zero",
+        "Log Horizon",
+        "Log Horizon S3",
+        "Log Horizon S1-S2",
+        "Sword Art Online",
+        "The Rising of the Shield Hero",
+        "Grimgar",
+        "Grimgar Ashes and Illusions",
+        "Saga of Tanya the Evil",
+        "The Devil is a Part-Timer",
+        "Campfire Cooking in Another World",
+        "Made in Abyss",
+        "Made in Abyss: Retsujitsu",
+        "Dungeon Meshi",
+        "Delicious in Dungeon",
+        "Frieren: Beyond Journey's End",
+        "Shangri-La Frontier",
+        "Dr. Stone",
+        "Dr. Stone S1-S3",
+
+        // â”€â”€â”€ Horror / Supernatural â”€â”€â”€
+        "Parasyte",
+        "Another",
+        "Tokyo Ghoul",
+        "Tokyo Ghoul:re",
+        "Junji Ito Collection",
+        "Shiki",
+        "Mononoke",
+        "Mieruko-chan",
+        "Hell Girl",
+        "Hellsing Ultimate",
+        "Deadman Wonderland",
+        "Elfen Lied",
+
+        // â”€â”€â”€ Sports / Music â”€â”€â”€
+        "Haikyuu!!",
+        "Haikyuu!! S2-S4",
+        "Yuri!!! on Ice",
+        "Yuri on Ice",
+        "Kuroko's Basketball",
+        "Kuroko's Basketball S2-S3",
+        "Hajime no Ippo",
+        "Hajime no Ippo S2-S3",
+        "Ping Pong the Animation",
+        "Chihayafuru",
+        "Chihayafuru S2-S3",
+        "Run with the Wind",
+        "Major",
+        "Major S1-S6",
+        "Ace of Diamond",
+        "Liz and the Blue Bird",
+        "K-On!",
+        "K-On! S2",
+        "Carole & Tuesday",
+        "Zombieland Saga",
+        "BanG Dream!",
+        "Love Live!",
+        "Love Live! Sunshine!!",
+
+        // â”€â”€â”€ Historical / Samurai / Adventure â”€â”€â”€
+        "Rurouni Kenshin",
+        "Rurouni Kenshin 1996",
+        "Rurouni Kenshin: Trust & Betrayal",
+        "Dororo",
+        "Dororo 2019",
+        "Kingdom",
+        "Kingdom S1-S4",
+        "Golden Kamuy",
+        "Hakuoki",
+        "Sarai-ya Goyou",
+        "House of Five Leaves",
+        "Sengoku Basara",
+        "Drifters",
+        "Hyouge Mono",
+        "Nobunaga Concerto",
+        "Basilisk",
+        "Katanagatari",
+        "Shigurui",
+        "Arslan Senki",
+        "Altair: A Record of Battles",
+        "Requiem from the Darkness",
+
+        // â”€â”€â”€ Romance â”€â”€â”€
+        "Toradora",
+        "Your Lie in April",
+        "Horimiya",
+        "Fruits Basket 2019"
+    ];
+
+    if (!Array.isArray(storage.customAnime)) {
+        storage.customAnime = [];
+    }
+
+    function getCustomAnime() {
+        var custom = storage.customAnime;
+        return Array.isArray(custom) ? custom : [];
+    }
+
+    function getAllAnime() {
+        return BUILT_IN_ANIME.concat(getCustomAnime());
+    }
+
+    function pickRandomAnime() {
+        var list = getAllAnime();
+        if (list.length === 0) return "Attack on Titan";
+        return list[Math.floor(Math.random() * list.length)];
+    }
+
+    var unregisterCommand = null;
+
+    function AnimeOracleSettings() {
+        var _useState = React.useState("");
+        var input = _useState[0];
+        var setInput = _useState[1];
+        var _useState2 = React.useState(getCustomAnime());
+        var customList = _useState2[0];
+        var setCustomList = _useState2[1];
+
+        function addAnime() {
+            var trimmed = input.trim();
+            if (!trimmed) return;
+            var current = getCustomAnime();
+            if (current.indexOf(trimmed) !== -1) return;
+            storage.customAnime = current.concat([trimmed]);
+            setCustomList(getCustomAnime());
+            setInput("");
+        }
+
+        function removeAnime(title) {
+            var current = getCustomAnime();
+            storage.customAnime = current.filter(function(t) { return t !== title; });
+            setCustomList(getCustomAnime());
+        }
+
+        var totalCount = BUILT_IN_ANIME.length + customList.length;
+
+        return React.createElement(
+            ScrollView,
+            { style: { flex: 1 } },
+            React.createElement(
+                FormSection,
+                { title: "Add Your Own Anime" },
+                React.createElement(FormInput, {
+                    value: input,
+                    onChange: function(t) { setInput(t); },
+                    placeholder: "e.g. Kaguya-sama: Love is War",
+                    returnKeyType: "done",
+                    onSubmitEditing: addAnime
+                }),
+                React.createElement(FormRow, {
+                    label: "\u2795 Add to Oracle",
+                    subLabel: "Tap to add the typed title above",
+                    onPress: addAnime
+                })
+            ),
+            React.createElement(
+                FormSection,
+                { title: "Custom Titles (" + customList.length + ")" },
+                customList.length === 0
+                    ? React.createElement(FormRow, {
+                        label: "No custom anime yet.",
+                        subLabel: "Type one above and hit Add!"
+                      })
+                    : customList.map(function(title) {
+                        return React.createElement(FormRow, {
+                            key: title,
+                            label: title,
+                            onPress: function() { removeAnime(title); },
+                            trailing: React.createElement(FormText, { style: { color: "#ff4444" } }, "Remove")
+                        });
+                      })
+            ),
+            React.createElement(FormDivider, null),
+            React.createElement(
+                FormSection,
+                { title: "Database Stats" },
+                React.createElement(FormRow, {
+                    label: "Built-in titles",
+                    subLabel: String(BUILT_IN_ANIME.length)
+                }),
+                React.createElement(FormRow, {
+                    label: "Custom titles",
+                    subLabel: String(customList.length)
+                }),
+                React.createElement(FormRow, {
+                    label: "Total available",
+                    subLabel: String(totalCount)
+                })
+            )
+        );
+    }
+
+    var plugin = {
+        onLoad: function() {
+            if (unregisterCommand) return;
+            unregisterCommand = registerCommand({
+                name: "recommend",
+                displayName: "recommend",
+                description: "AnimeOracle suggests a random anime to watch.",
+                displayDescription: "AnimeOracle suggests a random anime to watch.",
+                options: [],
+                execute: function() {
+                    var anime = pickRandomAnime();
+                    return { content: "You should watch: " + anime + "!" };
+                },
+                applicationId: "-1",
+                inputType: 1,
+                type: 1
+            });
+        },
+        onUnload: function() {
+            if (unregisterCommand) {
+                unregisterCommand();
+                unregisterCommand = null;
+            }
+        },
+        settings: AnimeOracleSettings
+    };
+
+    exports.default = plugin;
+    exports.settings = AnimeOracleSettings;
+    Object.defineProperty(exports, "__esModule", { value: true });
+
+})({}, vendetta.metro.common, vendetta.plugin, vendetta.storage, vendetta.ui.assets, vendetta.ui.components);
